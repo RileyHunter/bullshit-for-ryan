@@ -100,7 +100,7 @@ class Hand extends Entity {
     }
 
     checkCollision() {
-        return this.canCollide && this.x > .5 && this.x < .6 && this.y > .4 && this.y < .6 && this.vx < -2;
+        return this.canCollide && this.x > .5 && this.x < .6 && this.y > .4 && this.y < .6 && this.vx < -1.5;
     }
 
     checkReset() {
@@ -121,7 +121,8 @@ async function main(container) {
     const game = new Game();
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
-
+    document.body.style.overflow = 'hidden';
+    document.body.style.height = '100%';
     
     const jeff = game.spawn(Jeff, .5, .5);
 
@@ -135,6 +136,13 @@ async function main(container) {
     container.onresize = onResizeHandler;
 
     container.onmousemove = e => game.receiveMousePosition(e.clientX / canvas.width, e.clientY / canvas.height);
+    let onTouchMoveHandler = e => {
+        e.preventDefault();
+        for (let touch of e.changedTouches) {
+            game.receiveMousePosition(touch.clientX / canvas.width, touch.clientY / canvas.height);
+        }
+    }
+    window.addEventListener('touchmove', onTouchMoveHandler, { passive: false });
 
     let onCollideHandler = () => {
         var audio = new Audio('https://cdn.pixabay.com/download/audio/2022/10/23/audio_3a2110a5e3.mp3?filename=whip-123738.mp3');
